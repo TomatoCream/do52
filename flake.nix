@@ -61,14 +61,14 @@
             
             echo "⌨️  ZMK Zephyr environment initialized!"
             echo "   • MCU Target: nRF52840 (arm-zephyr-eabi)"
-            echo "   • Board: nice_nano_v2 (typical for Sofle)"
+            echo "   • Board: nice_nano (v2 is default)"
             echo ""
             echo "To initialize ZMK:"
             echo "  west init -l app/"
             echo "  west update"
             echo ""
             echo "To build firmware:"
-            echo "  west build -s app -b nice_nano_v2 -- -DSHIELD=sofle_left"
+            echo "  west build -s app -b nice_nano -- -DSHIELD=sofle_left"
           '';
         };
       };

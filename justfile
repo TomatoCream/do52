@@ -11,12 +11,18 @@ build: build-left build-right
 	@echo "   - target/do52pro_left.uf2"
 	@echo "   - target/do52pro_right.uf2"
 
-# Build the left half
-build-left:
+# Build the left half (v2 is default for nice_nano in this ZMK version)
+build-left: build-left-v2
+
+# Build the left half (v2)
+build-left-v2:
 	cd zmk-workspace && west build -p -s zmk.git/app -b nice_nano -- -DSHIELD=do52pro_left -DZMK_CONFIG="{{invocation_directory()}}/config"
 
-# Build the right half
-build-right:
+# Build the right half (v2 is default for nice_nano in this ZMK version)
+build-right: build-right-v2
+
+# Build the right half (v2)
+build-right-v2:
 	cd zmk-workspace && west build -p -s zmk.git/app -b nice_nano -d build/right -- -DSHIELD=do52pro_right -DZMK_CONFIG="{{invocation_directory()}}/config"
 
 # Flash the left half (ensure NICENANO is in bootloader mode)
