@@ -1,0 +1,69 @@
+#+TITLE: ZMK Zephyr Environment
+
+A Nix environment for building [[https://zmk.dev/][ZMK]] firmware, configured specifically for the =nice_nano= (using the =nrf52840= MCU) and the *do52pro* keyboard.
+
+* Getting Started
+Because this environment is managed by Nix using =flakes=, you have everything you need out of the box.
+
+** Prerequisites
+- [[https://nixos.org/download.html][Nix]] with Flakes enabled
+- Optional: =direnv= and =nix-direnv= for automatic activation
+
+** Usage
+Enter the development environment:
+#+begin_src shell
+nix develop
+#+end_src
+
+Or, if you use =direnv=, simply run:
+#+begin_src shell
+direnv allow
+#+end_src
+
+This will automatically drop you into a shell with:
+- The Zephyr SDK (version 0.16.x) configured for =arm-zephyr-eabi=
+- The python environment with =west= and all dependencies
+- Standard tools: =cmake=, =ninja=, =dfu-util=, =ccache=, =just=
+
+* Building ZMK Firmware
+Once you are in the environment, you can use the provided =just= commands for a streamlined workflow.
+
+** Initialization (One-time)
+If you are starting fresh:
+#+begin_src shell
+# Initialize the workspace
+nix develop --command west init -m https://github.com/zmkfirmware/zmk.git --mf app/west.yml zmk-workspace
+cd zmk-workspace && nix develop --command west update
+#+end_src
+
+** Building with Just
+From the project root, simply run:
+#+begin_src shell
+# Build both halves
+just build
+
+# Build individual halves
+just build-left
+just build-right
+#+end_src
+
+The =.uf2= firmware files will be automatically copied to the =target/= directory:
+- =target/do52pro_left.uf2=
+- =target/do52pro_right.uf2=
+
+** Manual Build (Custom Config)
+If you prefer not to use =just=, you can run:
+#+begin_src shell
+# Build for do52pro left half on nice_nano
+nix develop --command bash -c "cd zmk-workspace && west build -p -s zmk.git/app -b nice_nano -- -DSHIELD=do52pro_left -DZMK_CONFIG=\"$(pwd)/config\""
+
+# Build for do52pro right half on nice_nano
+nix develop --command bash -c "cd zmk-workspace && west build -p -s zmk.git/app -b nice_nano -d build/right -- -DSHIELD=do52pro_right -DZMK_CONFIG=\"$(pwd)/config\""
+#+end_src
+
+* Project Structure
+- =config/= :: Your custom ZMK configuration (keymaps, shields, etc.). *Commit this.*
+- =zmk-workspace/= :: The full Zephyr/ZMK source tree. *Ignored by git.*
+- =target/= :: The latest build outputs. *Ignored by git.*
+- =flake.nix= :: Defines the Nix build environment.
+- =justfile= :: Shortcut commands for building.
