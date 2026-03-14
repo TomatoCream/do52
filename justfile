@@ -21,15 +21,33 @@ build-right:
 
 # Flash the left half (ensure NICENANO is in bootloader mode)
 flash-left:
-	@if [ ! -d {{FLASH_MOUNT}} ]; then echo "❌ NICENANO not found at {{FLASH_MOUNT}}"; exit 1; fi
-	cp target/do52pro_left.uf2 {{FLASH_MOUNT}}/
-	@echo "⚡ Flashed left half!"
+	@DEV=$(lsblk -no NAME,LABEL | grep "NICENANO" | awk '{print "/dev/"$$1}') && \
+	if [ -n "$$DEV" ]; then \
+		if [ ! -d {{FLASH_MOUNT}} ]; then \
+			echo "🔍 Mounting NICENANO ($$DEV)..."; \
+			udisksctl mount -b $$DEV || true; \
+		fi; \
+		echo "⚡ Flashing left half..."; \
+		cp target/do52pro_left.uf2 {{FLASH_MOUNT}}/; \
+	else \
+		echo "❌ NICENANO device not found. Did you double-tap the reset button?"; \
+		exit 1; \
+	fi
 
 # Flash the right half (ensure NICENANO is in bootloader mode)
 flash-right:
-	@if [ ! -d {{FLASH_MOUNT}} ]; then echo "❌ NICENANO not found at {{FLASH_MOUNT}}"; exit 1; fi
-	cp target/do52pro_right.uf2 {{FLASH_MOUNT}}/
-	@echo "⚡ Flashed right half!"
+	@DEV=$(lsblk -no NAME,LABEL | grep "NICENANO" | awk '{print "/dev/"$$1}') && \
+	if [ -n "$$DEV" ]; then \
+		if [ ! -d {{FLASH_MOUNT}} ]; then \
+			echo "🔍 Mounting NICENANO ($$DEV)..."; \
+			udisksctl mount -b $$DEV || true; \
+		fi; \
+		echo "⚡ Flashing right half..."; \
+		cp target/do52pro_right.uf2 {{FLASH_MOUNT}}/; \
+	else \
+		echo "❌ NICENANO device not found. Did you double-tap the reset button?"; \
+		exit 1; \
+	fi
 
 # Build and flash the left half
 build-flash-left: build-left flash-left
