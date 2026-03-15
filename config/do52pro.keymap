@@ -72,5 +72,17 @@
                                       &none &none &none &none &none
                         >;
                 };
+                mouse_layer {
+                        bindings = <
+   &trans &trans &trans &trans &trans &trans      &trans &trans &trans &trans &trans &trans
+   &trans &trans &trans &trans &trans &trans      &trans &trans &trans &trans &trans &trans
+   &trans &trans &trans &trans &trans &trans      &trans &trans &trans &trans &trans &trans
+   &trans &trans &trans &trans &trans &trans      &trans &trans &trans &trans &trans &trans
+   &trans &trans               &trans &trans      &mkp LCLK &mkp RCLK         &mkp MCLK &trans
+                                    // DPAD Left, Down, Middle, Up, Right
+                                    // DPAD Left, Down, Middle, Up, Right
+                                      &trans &trans &trans &trans &trans
+                        >;
+                };
         };
 };

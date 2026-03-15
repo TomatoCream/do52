@@ -10,13 +10,19 @@ build: build-left build-right
 
 # Build the left half
 build-left:
-	cd zmk-workspace && west build -p -s zmk.git/app -b nice_nano -- -DSHIELD=do52pro_left -DZMK_CONFIG="{{invocation_directory()}}/config"
+	cd zmk-workspace && west build -p -s zmk/app -b nice_nano_v2 -- \
+		-DSHIELD=do52pro_left \
+		-DZMK_CONFIG="{{invocation_directory()}}/config" \
+		-DZMK_EXTRA_MODULES="{{invocation_directory()}}/zmk-workspace/kb_zmk_ps2_mouse_trackpoint_driver"
 	mkdir -p target
 	cp zmk-workspace/build/zephyr/zmk.uf2 ./target/do52pro_left.uf2
 
 # Build the right half
 build-right:
-	cd zmk-workspace && west build -p -s zmk.git/app -b nice_nano -d build/right -- -DSHIELD=do52pro_right -DZMK_CONFIG="{{invocation_directory()}}/config"
+	cd zmk-workspace && west build -p -s zmk/app -b nice_nano_v2 -d build/right -- \
+		-DSHIELD=do52pro_right \
+		-DZMK_CONFIG="{{invocation_directory()}}/config" \
+		-DZMK_EXTRA_MODULES="{{invocation_directory()}}/zmk-workspace/kb_zmk_ps2_mouse_trackpoint_driver"
 	mkdir -p target
 	cp zmk-workspace/build/right/zephyr/zmk.uf2 ./target/do52pro_right.uf2
 
@@ -58,7 +64,7 @@ build-flash-right: build-right flash-right
 
 # Build the sofle left half (backup)
 build-sofle-left:
-        cd zmk-workspace && west build -p -s zmk.git/app -b nice_nano -- -DSHIELD=sofle_left -DZMK_CONFIG="{{invocation_directory()}}/config"
+        cd zmk-workspace && west build -p -s zmk/app -b nice_nano_v2 -- -DSHIELD=sofle_left -DZMK_CONFIG="{{invocation_directory()}}/config"
         mkdir -p target
         cp zmk-workspace/build/zephyr/zmk.uf2 ./target/sofle_left.uf2
 
